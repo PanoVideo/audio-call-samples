@@ -26,6 +26,7 @@ import com.pano.rtc.api.model.stats.RtcVideoRecvStats;
 import com.pano.rtc.api.model.stats.RtcVideoSendStats;
 
 import java.util.Locale;
+import java.nio.charset.StandardCharsets;
 
 
 public class CallActivity extends AppCompatActivity implements RtcEngineCallback,
@@ -297,6 +298,12 @@ public class CallActivity extends AppCompatActivity implements RtcEngineCallback
         runOnUiThread(()-> {
             appendMessage("whiteboard is stopped");
         });
+    }
+
+    @Override
+    public void onMessage(long userId, byte[] bytes) {
+        String msg = new String(bytes, StandardCharsets.UTF_8);
+        Log.i(TAG, "+++++ onMessage: userId="+userId+", msg="+msg);
     }
 
     @Override
