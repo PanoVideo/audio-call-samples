@@ -23,8 +23,6 @@ import com.pano.rtc.api.RtcEngine;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 10;
 
-   public static final String APPID = %%填入应用的 APPID%%;
-    private String mAppToken = %%填入从 PANO 获取的临时 APP Token%%;
     private EditText mChannelId;
     private EditText mUserId;
 
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (RtcEngine.checkPermission(this).size() == 0) {
-                    startCall(mAppToken, mChannelId.getText().toString(), mUserId.getText().toString());
+                    startCall(PanoApplication.APP_TOKEN, mChannelId.getText().toString(), mUserId.getText().toString());
                 } else {
                     Toast.makeText(MainActivity.this, "Some permissions are denied", Toast.LENGTH_LONG).show();
                 }
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        startCall(mAppToken, channelId, userId);
+        startCall(PanoApplication.APP_TOKEN, channelId, userId);
     }
 
     private void startCall(String token, String channelId, String userId) {
