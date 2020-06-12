@@ -4,9 +4,10 @@ const panoDemo = {
   users: []
 }
 
+let remainsecInterval = ''
 const appId = document.getElementById('appID').value
 const countdownDic = document.getElementById('countdown')
-const rtcEngine = new PanoRtc.RtcEngine(appId)
+const rtcEngine = new PanoRtc.RtcEngine(appId || '-')
 window.rtcEngine = rtcEngine
 
 rtcEngine.on(PanoRtc.RtcEngine.Events.joinChannelConfirm, function (data) {
@@ -81,11 +82,12 @@ rtcEngine.on(PanoRtc.RtcEngine.Events.channelCountDown, (data) => {
   panoDemo.remainsec = data.remainsec
   countdownDic.style.display = 'block'
   countdownDic.innerHTML = `remainsec: ${panoDemo.remainsec}`
-  const interval = setInterval(() => {
+  remainsecInterval = setInterval(() => {
     if (panoDemo.remainsec > 0) {
       countdownDic.innerHTML = `remainsec: ${--panoDemo.remainsec}`
     } else {
-      clearInterval(interval)
+      clearInterval(remainsecInterval)
+      leaveChannel()
     }
   }, 1000)
 })
@@ -143,6 +145,7 @@ joinChannelBtn.onclick = () => {
 function leaveChannel(passive = false) {
   leaveChannelBtn.disabled = true
   leaveChannelBtn.style.color = 'black'
+  clearInterval(remainsecInterval)
   if (!passive) {
     rtcEngine.leaveChannel()
   }
