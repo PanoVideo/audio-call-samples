@@ -17,7 +17,7 @@ module.exports = {
     hot: false,
     inline: false,
     compress: true,
-    port: 8080,
+    port: 8082,
     host: '0.0.0.0',
     https: true
   }
