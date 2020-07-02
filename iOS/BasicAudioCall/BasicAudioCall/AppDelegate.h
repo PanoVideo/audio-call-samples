@@ -1,13 +1,13 @@
 //
-//  SceneDelegate.h
-//  PanoAudioCall
+//  AppDelegate.h
+//  BasicAudioCall
 //
 //  Copyright © 2020 Pano. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface SceneDelegate : UIResponder <UIWindowSceneDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow * window;
 
