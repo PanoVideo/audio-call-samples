@@ -35,7 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		57A8BF5023FD255100304E19 /* PanoAudioCall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PanoAudioCall.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		57A8BF5023FD255100304E19 /* BasicAudioCall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicAudioCall.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57A8BF5323FD255100304E19 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		57A8BF5423FD255100304E19 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		57A8BF5623FD255100304E19 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
@@ -69,7 +69,7 @@
 		57A8BF4723FD255100304E19 = {
 			isa = PBXGroup;
 			children = (
-				57A8BF5223FD255100304E19 /* PanoAudioCall */,
+				57A8BF5223FD255100304E19 /* BasicAudioCall */,
 				57A8BF7223FE6D2000304E19 /* Frameworks */,
 				57A8BF5123FD255100304E19 /* Products */,
 			);
@@ -78,12 +78,12 @@
 		57A8BF5123FD255100304E19 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				57A8BF5023FD255100304E19 /* PanoAudioCall.app */,
+				57A8BF5023FD255100304E19 /* BasicAudioCall.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		57A8BF5223FD255100304E19 /* PanoAudioCall */ = {
+		57A8BF5223FD255100304E19 /* BasicAudioCall */ = {
 			isa = PBXGroup;
 			children = (
 				57A8BF5323FD255100304E19 /* AppDelegate.h */,
@@ -102,7 +102,7 @@
 				57A8BF6423FD255400304E19 /* Info.plist */,
 				57A8BF6523FD255400304E19 /* main.m */,
 			);
-			path = PanoAudioCall;
+			path = BasicAudioCall;
 			sourceTree = "<group>";
 		};
 		57A8BF7223FE6D2000304E19 /* Frameworks */ = {
@@ -116,9 +116,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		57A8BF4F23FD255100304E19 /* PanoAudioCall */ = {
+		57A8BF4F23FD255100304E19 /* BasicAudioCall */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 57A8BF6923FD255400304E19 /* Build configuration list for PBXNativeTarget "PanoAudioCall" */;
+			buildConfigurationList = 57A8BF6923FD255400304E19 /* Build configuration list for PBXNativeTarget "BasicAudioCall" */;
 			buildPhases = (
 				57A8BF4C23FD255100304E19 /* Sources */,
 				57A8BF4D23FD255100304E19 /* Frameworks */,
@@ -129,9 +129,9 @@
 			);
 			dependencies = (
 			);
-			name = PanoAudioCall;
+			name = BasicAudioCall;
 			productName = PanoAudioCall;
-			productReference = 57A8BF5023FD255100304E19 /* PanoAudioCall.app */;
+			productReference = 57A8BF5023FD255100304E19 /* BasicAudioCall.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -148,7 +148,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 57A8BF4B23FD255100304E19 /* Build configuration list for PBXProject "PanoAudioCall" */;
+			buildConfigurationList = 57A8BF4B23FD255100304E19 /* Build configuration list for PBXProject "BasicAudioCall" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -161,7 +161,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				57A8BF4F23FD255100304E19 /* PanoAudioCall */,
+				57A8BF4F23FD255100304E19 /* BasicAudioCall */,
 			);
 		};
 /* End PBXProject section */
@@ -334,12 +334,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../SDK",
 				);
-				INFOPLIST_FILE = PanoAudioCall/Info.plist;
+				INFOPLIST_FILE = BasicAudioCall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = video.pano.PanoAudioCall;
+				PRODUCT_BUNDLE_IDENTIFIER = video.pano.BasicAudioCall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -356,12 +356,12 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../SDK",
 				);
-				INFOPLIST_FILE = PanoAudioCall/Info.plist;
+				INFOPLIST_FILE = BasicAudioCall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = video.pano.PanoAudioCall;
+				PRODUCT_BUNDLE_IDENTIFIER = video.pano.BasicAudioCall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -370,7 +370,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		57A8BF4B23FD255100304E19 /* Build configuration list for PBXProject "PanoAudioCall" */ = {
+		57A8BF4B23FD255100304E19 /* Build configuration list for PBXProject "BasicAudioCall" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				57A8BF6723FD255400304E19 /* Debug */,
@@ -379,7 +379,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		57A8BF6923FD255400304E19 /* Build configuration list for PBXNativeTarget "PanoAudioCall" */ = {
+		57A8BF6923FD255400304E19 /* Build configuration list for PBXNativeTarget "BasicAudioCall" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				57A8BF6A23FD255400304E19 /* Debug */,

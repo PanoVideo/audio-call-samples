@@ -1,6 +1,6 @@
 //
 //  JoinViewController.h
-//  PanoAudioCall
+//  BasicAudioCall
 //
 //  Copyright © 2020 Pano. All rights reserved.
 //
