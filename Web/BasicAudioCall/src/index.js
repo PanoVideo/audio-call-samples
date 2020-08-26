@@ -232,7 +232,7 @@ rtcEngine.on(PanoRtc.RtcEngine.Events.joinChannelConfirm, data => {
   button_audio.disabled = false;
 });
 
-rtcEngine.on(PanoRtc.RtcEngine.Events.usersListChange, result => {
+rtcEngine.on(PanoRtc.RtcEngine.Events.userListChange, result => {
   console.log('demo app: rosterChange', result);
   PanoDemo.users = result.users.map(user => {
     const oldUser = find(PanoDemo.users, { userId: user.userId }) || {};
@@ -250,8 +250,8 @@ rtcEngine.on(PanoRtc.RtcEngine.Events.userJoin, (data) => {
 rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMute, (data) =>
   console.log('demo app: userAudioMute,', data)
 );
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnMute, (data) =>
-  console.log('demo app: userAudioUnMute,', data)
+rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) =>
+  console.log('demo app: userAudioUnmute,', data)
 );
 rtcEngine.on(PanoRtc.RtcEngine.Events.firstAudioDataReceived, (data) =>
   console.log('demo app: firstAudioDataReceived', data)
@@ -297,7 +297,7 @@ rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMuted, (data) => {
   userMediaStatusUpdate(data, 'audio', 'mute');
 });
 
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmuted, (data) => {
+rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) => {
   userMediaStatusUpdate(data, 'audio', 'unmute');
 });
 
