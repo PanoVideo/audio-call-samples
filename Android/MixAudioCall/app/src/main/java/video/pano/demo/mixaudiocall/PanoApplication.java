@@ -8,8 +8,8 @@ import com.pano.rtc.api.RtcEngineConfig;
 
 
 public class PanoApplication extends Application {
-    public static final String APPID = "243540d6698e4463a52cebc72ba977de";
-    public static final String APP_TOKEN = "01000003Vk1qckE5V0tE3QLZ7hPtRUtZVPWA30J1nnCDV4U4kXJ0WUomGiFrpxVxB5sKFrPvnEjR0e3RPns0eoCX8QhbQmLdwqyMfnnzRGGOZZMBhZC8kzRH5UhoMV9cZBfxL7nQ3ig52nVLsJAxWs/bveLFCVSFGFyK6C4zbck+NCUrpozqVGw7b0u81P12y17LwMdH6tE5M2e14moz1XFSTtlKOXN+6dcy5aZ+CeA0iISKTlPuisD4I6vQHzZmRNQWMFVZr+5ch0krbzU=";
+    public static final String APPID = %%填入应用的 APPID%%;
+    public static final String APP_TOKEN = %%填入从 PANO 获取的临时 APP Token%%;
     public static final String PANO_SERVER = "api.pano.video";
 
     private RtcEngine mRtcEngine;
