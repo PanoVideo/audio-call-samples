@@ -14,11 +14,11 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, './static'),
-    hot: false,
+    hot: true,
     inline: false,
     compress: true,
-    port: 8082,
-    host: '0.0.0.0',
+    port: 8088,
+    host: '127.0.0.1',
     https: true
   }
 }
