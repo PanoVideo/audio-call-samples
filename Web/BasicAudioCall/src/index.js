@@ -34,6 +34,7 @@ rtcEngine.on = new Proxy(rtcEngine.on, {
   apply(target, object, args) {
     Reflect.apply(target, object, [args[0], params => {
       eventTextarea.value += `${JSON.stringify(params)}\r\n \r\n`;
+      eventTextarea.scrollTop = eventTextarea.scrollHeight;
       Reflect.apply(args[1], object, [params]);
     }]);
   }
@@ -80,7 +81,6 @@ function joinChannel() {
     return
   }
 
-  // 使用创建的临时 token
   let channelParam = {
     appId: PanoDemo.appId,
     token: PanoDemo.token,
@@ -95,7 +95,6 @@ function joinChannel() {
   });
   console.log('joinChannelResult: ', joinChannelResult);
 } 
-
 
 function leaveChannel(passive = false) {
   button_leaveChannel.disabled = true;

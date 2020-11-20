@@ -22,7 +22,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Channel Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6In-Z6-U3f">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Channel ID" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6In-Z6-U3f">
                                 <rect key="frame" x="50" y="178" width="314" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -75,7 +75,7 @@
                     </view>
                     <connections>
                         <outlet property="channelMode" destination="iAS-95-n10" id="c70-lA-xEM"/>
-                        <outlet property="channelName" destination="6In-Z6-U3f" id="VCz-Y4-pZx"/>
+                        <outlet property="channelId" destination="6In-Z6-U3f" id="VCz-Y4-pZx"/>
                         <outlet property="userName" destination="Drv-sd-Q1j" id="q11-8S-pOl"/>
                     </connections>
                 </viewController>
