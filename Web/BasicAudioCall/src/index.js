@@ -7,7 +7,6 @@ let PanoDemo = {
 // UI
 const appId = document.getElementById('appID').value || 'temp';
 const countdownDic = document.getElementById('countdown');
-let rtcEngine = new PanoRtc.RtcEngine(appId);
 
 const button_joinChannel = document.getElementById('joinChannel');
 const button_leaveChannel = document.getElementById('leaveChannel');
@@ -25,20 +24,8 @@ button_mute_mic.onclick = pano_muteMic;
 button_get_mic.onclick = pano_getMics;
 button_get_speaker.onclick = pano_getSpeakers;
 
-// For easily debug
-window.rtcEngine = rtcEngine;
 window.PanoDemo = PanoDemo;
 
-const eventTextarea = document.getElementById('events');
-rtcEngine.on = new Proxy(rtcEngine.on, {
-  apply(target, object, args) {
-    Reflect.apply(target, object, [args[0], params => {
-      eventTextarea.value += `${JSON.stringify(params)}\r\n \r\n`;
-      eventTextarea.scrollTop = eventTextarea.scrollHeight;
-      Reflect.apply(args[1], object, [params]);
-    }]);
-  }
-});
 
 function init_UI () {
   button_mute_mic.disabled = true;
@@ -80,6 +67,115 @@ function joinChannel() {
     alert('请填写必要参数！')
     return
   }
+  let rtcEngine = null;
+  if(document.getElementById('rtcServer').value){
+    rtcEngine = new PanoRtc.RtcEngine({appId, rtcServer: rtcServer.value});
+  } else {
+    rtcEngine = new PanoRtc.RtcEngine(appId);
+  }
+  // For easily debug
+  window.rtcEngine = rtcEngine;
+  const eventTextarea = document.getElementById('events');
+  rtcEngine.on = new Proxy(rtcEngine.on, {
+    apply(target, object, args) {
+      Reflect.apply(target, object, [args[0], params => {
+        eventTextarea.value += `${JSON.stringify(params)}\r\n \r\n`;
+        eventTextarea.scrollTop = eventTextarea.scrollHeight;
+        Reflect.apply(args[1], object, [params]);
+      }]);
+    }
+  });
+
+  /*****************************************************************************************************************
+   *                                         Events Handlers                                                       *
+   *****************************************************************************************************************
+  */
+
+  rtcEngine.on(PanoRtc.RtcEngine.Events.joinChannelConfirm, data => {
+    if (data.result !== 'success') {
+      button_leaveChannel.disabled = true;
+      button_leaveChannel.style.color = 'black';
+      button_joinChannel.disabled = false;
+      button_joinChannel.style.color = 'green';
+      window.alert(`join channel failed because: ${data.message}`);
+      return;
+    }
+    console.log('join channel success!');
+    button_leaveChannel.disabled = false;
+    button_leaveChannel.style.color = 'red';
+    button_leaveChannel.onclick = () => leaveChannel();
+    button_mute_mic.disabled = false;
+    button_audio.disabled = false;
+  });
+
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userListChange, result => {
+    console.log('demo app: rosterChange', result);
+    PanoDemo.users = result.users.map(user => {
+      const oldUser = find(PanoDemo.users, { userId: user.userId }) || {};
+      return Object.assign(oldUser, user);
+    });
+    updateRoster();
+  });
+
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userLeave, (data) => {
+    console.log('demo app: userleave,', data);
+  });
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userJoin, (data) => {
+    console.log('demo app: userjoin,', data);
+  });
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMute, (data) =>
+    console.log('demo app: userAudioMute,', data)
+  );
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) =>
+    console.log('demo app: userAudioUnmute,', data)
+  );
+  rtcEngine.on(PanoRtc.RtcEngine.Events.firstAudioDataReceived, (data) =>
+    console.log('demo app: firstAudioDataReceived', data)
+  );
+  rtcEngine.on(PanoRtc.RtcEngine.Events.channelFailover, (data) =>
+    console.error('demo app: channelFailover', data)
+  );
+  rtcEngine.on(PanoRtc.RtcEngine.Events.audioDeviceChange, (data) =>
+    console.log('demo app: audioDeviceChange', data)
+  );
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStart, (data) =>
+    console.log('demo app: userAudioStart', data)
+  );
+  rtcEngine.on(PanoRtc.RtcEngine.Events.channelCountDown, (data) => {
+    console.log('demo app: channelCountDown', data);
+    PanoDemo.remainsec = data.remainsec;
+    countdownDic.style.display = 'block';
+    countdownDic.innerHTML = `remainsec: ${PanoDemo.remainsec}`;
+    const interval = setInterval(() => {
+      if (PanoDemo.remainsec > 0) {
+        countdownDic.innerHTML = `remainsec: ${--PanoDemo.remainsec}`;
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000);
+  });
+  rtcEngine.on(PanoRtc.RtcEngine.Events.leaveChannelIndication, (data) => {
+    console.log('demo app: leaveChannelIndication', data);
+    leaveChannel(true);
+  });
+  rtcEngine.on(PanoRtc.RtcEngine.Events.enumerateDeviceTimeout, (data) => {
+    console.log('demo app: enumerateDeviceTimeout', data);
+  });
+  // rtcEngine.on(PanoRtc.RtcEngine.Events.activeSpeakerListUpdate, data => console.log('demo app: activeSpeakerListUpdate', data))
+
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStart, (data) => {
+    userMediaStatusUpdate(data, 'audio', 'unmute');
+  });
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStop, (data) => {
+    userMediaStatusUpdate(data, 'audio', 'closed');
+  });
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMuted, (data) => {
+    userMediaStatusUpdate(data, 'audio', 'mute');
+  });
+
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) => {
+    userMediaStatusUpdate(data, 'audio', 'unmute');
+  });
 
   let channelParam = {
     appId: PanoDemo.appId,
@@ -105,7 +201,11 @@ function leaveChannel(passive = false) {
   PanoDemo = {
     users: []
   };
-  rtcEngine = new PanoRtc.RtcEngine(appId);
+  if(document.getElementById('rtcServer').value){
+    rtcEngine = new PanoRtc.RtcEngine({appId, rtcServer: rtcServer.value});
+  } else {
+    rtcEngine = new PanoRtc.RtcEngine(appId);
+  }
   button_joinChannel.disabled = false;
   button_joinChannel.style.color = 'green';
   textArea_roster.value = '';
@@ -209,96 +309,6 @@ function stopAudio () {
   button_audio.onclick = startAudio;
 }
 
-/*****************************************************************************************************************
- *                                         Events Handlers                                                       *
- *****************************************************************************************************************
- */
-
-rtcEngine.on(PanoRtc.RtcEngine.Events.joinChannelConfirm, data => {
-  if (data.result !== 'success') {
-    button_leaveChannel.disabled = true;
-    button_leaveChannel.style.color = 'black';
-    button_joinChannel.disabled = false;
-    button_joinChannel.style.color = 'green';
-    window.alert(`join channel failed because: ${data.message}`);
-    return;
-  }
-  console.log('join channel success!');
-  button_leaveChannel.disabled = false;
-  button_leaveChannel.style.color = 'red';
-  button_leaveChannel.onclick = () => leaveChannel();
-  button_mute_mic.disabled = false;
-  button_audio.disabled = false;
-});
-
-rtcEngine.on(PanoRtc.RtcEngine.Events.userListChange, result => {
-  console.log('demo app: rosterChange', result);
-  PanoDemo.users = result.users.map(user => {
-    const oldUser = find(PanoDemo.users, { userId: user.userId }) || {};
-    return Object.assign(oldUser, user);
-  });
-  updateRoster();
-});
-
-rtcEngine.on(PanoRtc.RtcEngine.Events.userLeave, (data) => {
-  console.log('demo app: userleave,', data);
-});
-rtcEngine.on(PanoRtc.RtcEngine.Events.userJoin, (data) => {
-  console.log('demo app: userjoin,', data);
-});
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMute, (data) =>
-  console.log('demo app: userAudioMute,', data)
-);
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) =>
-  console.log('demo app: userAudioUnmute,', data)
-);
-rtcEngine.on(PanoRtc.RtcEngine.Events.firstAudioDataReceived, (data) =>
-  console.log('demo app: firstAudioDataReceived', data)
-);
-rtcEngine.on(PanoRtc.RtcEngine.Events.channelFailover, (data) =>
-  console.error('demo app: channelFailover', data)
-);
-rtcEngine.on(PanoRtc.RtcEngine.Events.audioDeviceChange, (data) =>
-  console.log('demo app: audioDeviceChange', data)
-);
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStart, (data) =>
-  console.log('demo app: userAudioStart', data)
-);
-rtcEngine.on(PanoRtc.RtcEngine.Events.channelCountDown, (data) => {
-  console.log('demo app: channelCountDown', data);
-  PanoDemo.remainsec = data.remainsec;
-  countdownDic.style.display = 'block';
-  countdownDic.innerHTML = `remainsec: ${PanoDemo.remainsec}`;
-  const interval = setInterval(() => {
-    if (PanoDemo.remainsec > 0) {
-      countdownDic.innerHTML = `remainsec: ${--PanoDemo.remainsec}`;
-    } else {
-      clearInterval(interval);
-    }
-  }, 1000);
-});
-rtcEngine.on(PanoRtc.RtcEngine.Events.leaveChannelIndication, (data) => {
-  console.log('demo app: leaveChannelIndication', data);
-  leaveChannel(true);
-});
-rtcEngine.on(PanoRtc.RtcEngine.Events.enumerateDeviceTimeout, (data) => {
-  console.log('demo app: enumerateDeviceTimeout', data);
-});
-// rtcEngine.on(PanoRtc.RtcEngine.Events.activeSpeakerListUpdate, data => console.log('demo app: activeSpeakerListUpdate', data))
-
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStart, (data) => {
-  userMediaStatusUpdate(data, 'audio', 'unmute');
-});
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStop, (data) => {
-  userMediaStatusUpdate(data, 'audio', 'closed');
-});
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMuted, (data) => {
-  userMediaStatusUpdate(data, 'audio', 'mute');
-});
-
-rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) => {
-  userMediaStatusUpdate(data, 'audio', 'unmute');
-});
 
 (function () {
   let rand = Math.random();
