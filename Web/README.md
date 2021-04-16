@@ -16,4 +16,4 @@
 在 web demo 目录下，运行 `npm i`
 
 ## 6. 编译运行
-在 web demo 目录下，运行 `npm run dev`, 打开 `https://localhost:8082/` 即可使用。
+在 web demo 目录下，运行 `npm run dev`, 打开 `https://localhost:8088/` 即可使用。

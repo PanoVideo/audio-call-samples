@@ -10,8 +10,7 @@
 拍乐云Demo源代码托管在 [github](https://github.com/PanoVideo) 上，用户可从github上clone。
 
 ## 4. 下载 SDK
-拍乐云实时音视频 SDK 可从拍乐云 [开发者中心](https://developer.pano.video/download/) 下载，并放置到 Demo 源码的 SDK 目录中。
-当前 Demo 兼容的 SDK 版本为v0.9.8。
+拍乐云实时音视频 SDK 可从拍乐云 [下载页面](https://www.pano.video/download.html#sdk) 下载，并放置到 Demo 源码的 SDK 目录中。
 
 ## 5. 生成临时token
 用户在创建应用获取到 APPID 后，还需要 token 才可以使用拍乐云实时音视频服务。对于 Demo 用户可在拍乐云控制台为应用生成临时token。

@@ -2,4 +2,4 @@
 
 ## 下载最新 PANO SDK
 
-[PanoRtc.framework](https://developer.pano.video/download/)
+[PanoRtc.framework](https://www.pano.video/download.html#sdk)
