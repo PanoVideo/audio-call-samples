@@ -212,3 +212,7 @@ doc/
 
 */node_modules
 Web/*/package-lock.json
+
+# SDK
+*.framework
+*.xcframework
