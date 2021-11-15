@@ -4,7 +4,7 @@
   "description": "Basic audio call demo with panortc.",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --config webpack.config.js --progress --colors --open"
+    "dev": "webpack-dev-server --config webpack.config.js --progress --color --open"
   },
   "author": "",
   "license": "MIT",
@@ -12,11 +12,12 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "babel-loader": "^8.1.0",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "lodash-es": "^4.17.21",
+    "webpack": "^5.64.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
   },
   "dependencies": {
-    "@pano.video/panortc": "1.1.7"
+    "@pano.video/panortc": ">=1.4.4"
   }
 }
