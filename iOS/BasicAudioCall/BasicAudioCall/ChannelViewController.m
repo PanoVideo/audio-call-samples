@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel * message;
 @property (strong, nonatomic) PanoRtcEngineKit * engineKit;
+@property (strong, nonatomic) NSMutableDictionary * userList;
 
 @end
 
@@ -21,6 +22,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     UIApplication.sharedApplication.idleTimerDisabled = YES;
+    self.userList = [NSMutableDictionary dictionary];
     [self createEngineKit];
     [self joinChannel];
 }
@@ -62,7 +64,7 @@
 - (void)joinChannel {
     PanoRtcChannelConfig * channelConfig = [[PanoRtcChannelConfig alloc] init];
     channelConfig.mode = ChannelInfo.channelMode;
-    channelConfig.userName = ChannelInfo.userName;
+    channelConfig.userName = [@"iOS_" stringByAppendingString:@(ChannelInfo.userId).stringValue];
     PanoResult result = [_engineKit joinChannelWithToken:ChannelInfo.token
                                                channelId:ChannelInfo.channelId
                                                   userId:ChannelInfo.userId
@@ -102,39 +104,40 @@
 
 - (void)onUserJoinIndication:(UInt64)userId
                     withName:(NSString * _Nullable)userName {
+    [self.userList setObject:userName forKey:@(userId).stringValue];
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.message.text = [NSString stringWithFormat:@"User %@ (%lld) join channel.", userName, userId];
+        self.message.text = [NSString stringWithFormat:@"User %llu(%@) join channel.", userId, userName];
     });
 }
 
 - (void)onUserLeaveIndication:(UInt64)userId
                    withReason:(PanoUserLeaveReason)reason {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.message.text = [NSString stringWithFormat:@"User %@ (%lld) leave channel with reason: %ld.", nil, userId, reason];
+        self.message.text = [NSString stringWithFormat:@"User %llu(%@) leave channel with reason: %ld.", userId, [self.userList valueForKey:@(userId).stringValue], reason];
     });
 }
 
 - (void)onUserAudioStart:(UInt64)userId {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.message.text = [NSString stringWithFormat:@"User %@ (%lld) start audio.", nil, userId];
+        self.message.text = [NSString stringWithFormat:@"User %llu(%@) start audio.", userId, [self.userList valueForKey:@(userId).stringValue]];
     });
 }
 
 - (void)onUserAudioStop:(UInt64)userId {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.message.text = [NSString stringWithFormat:@"User %@ (%lld) stop audio.", nil, userId];
+        self.message.text = [NSString stringWithFormat:@"User %llu(%@) stop audio.", userId, [self.userList valueForKey:@(userId).stringValue]];
     });
 }
 
 - (void)onUserAudioMute:(UInt64)userId {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.message.text = [NSString stringWithFormat:@"User %@ (%lld) mute audio.", nil, userId];
+        self.message.text = [NSString stringWithFormat:@"User %llu(%@) mute audio.", userId, [self.userList valueForKey:@(userId).stringValue]];
     });
 }
 
 - (void)onUserAudioUnmute:(UInt64)userId {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.message.text = [NSString stringWithFormat:@"User %@ (%lld) unmute audio.", nil, userId];
+        self.message.text = [NSString stringWithFormat:@"User %llu(%@) unmute audio.", userId, [self.userList valueForKey:@(userId).stringValue]];
     });
 }
 

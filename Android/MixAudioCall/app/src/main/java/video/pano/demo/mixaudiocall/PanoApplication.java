@@ -22,10 +22,7 @@ public class PanoApplication extends Application {
 
     private RtcEngine mRtcEngine;
     private PanoEngineCallback mRtcCallback = new PanoEngineCallback();
-
     protected Constants.AudioAecType mAudioAecType = Constants.AudioAecType.Default;
-    protected boolean mHwAcceleration = false;
-
 
     @Override
     public void onCreate() {
@@ -35,11 +32,11 @@ public class PanoApplication extends Application {
         // 设置PANO媒体引擎的配置参数
         RtcEngineConfig engineConfig = new RtcEngineConfig();
         engineConfig.appId = APPID;
+        // 仅私有化环境需要配置 server 属性
         engineConfig.server = PANO_SERVER;
         engineConfig.context = getApplicationContext();
         engineConfig.callback = mRtcCallback;
         engineConfig.audioAecType = mAudioAecType;
-        engineConfig.videoCodecHwAcceleration = mHwAcceleration;
         try {
             mRtcEngine = RtcEngine.create(engineConfig);
         } catch (Exception e) {
@@ -56,6 +53,6 @@ public class PanoApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        RtcEngine.destroy();
+        mRtcEngine.destroy();
     }
 }

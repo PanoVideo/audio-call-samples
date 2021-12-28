@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
-                if (RtcEngine.checkPermission(this).size() == 0) {
+                if (getMissedPermissions().size() == 0) {
                     startCall(PanoApplication.APP_TOKEN, mChannelId.getText().toString(), mUserId.getText().toString());
                 } else {
                     Toast.makeText(MainActivity.this, "Some permissions are denied", Toast.LENGTH_LONG).show();
@@ -74,9 +74,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        final List<String> missed = RtcEngine.checkPermission(this);
+        final List<String> missed = getMissedPermissions();
         if (missed.size() != 0) {
-
             List<String> showRationale = new ArrayList<>();
             for (String permission : missed) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
@@ -112,5 +111,17 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("mode1v1", mMode1v1.isChecked());
         intent.setClass(this, CallActivity.class);
         startActivity(intent);
+    }
+
+    private List<String> getMissedPermissions(){
+        List<String> missed = RtcEngine.checkPermission(this);
+        for (String permission : missed) {
+            // BasicAudioCall do NOT need camera permission
+            if ("android.permission.CAMERA".equals(permission)) {
+                missed.remove(permission);
+                return missed;
+            }
+        }
+        return missed;
     }
 }

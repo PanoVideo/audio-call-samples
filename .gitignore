@@ -160,6 +160,7 @@ ClientBin/
 *.pfx
 *.publishsettings
 node_modules/
+.idea/
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -183,7 +184,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
-
 
 # Xcode
 .DS_Store
@@ -216,3 +216,4 @@ Web/*/package-lock.json
 # SDK
 *.framework
 *.xcframework
+panortc.aar

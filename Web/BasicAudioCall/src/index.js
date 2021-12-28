@@ -5,7 +5,19 @@ let PanoDemo = {
 };
 
 // UI
-const appId = document.getElementById('appID').value || 'temp';
+const input_rtcServer = document.getElementById('rtcServer');
+const input_appId = document.getElementById('appID');
+const input_token = document.getElementById('token');
+const input_channel = document.getElementById('channelID');
+const input_userId = document.getElementById('userID');
+
+input_rtcServer.value = localStorage.getItem("PanoDemoRtcServer");
+input_appId.value = localStorage.getItem("PanoDemoAppId");
+input_token.value = localStorage.getItem("PanoDemoToken");
+input_channel.value = localStorage.getItem("PanoDemoChannelId");
+input_userId.value = localStorage.getItem("PanoDemoUserId");
+
+const appId = input_appId.value;
 const countdownDic = document.getElementById('countdown');
 
 const button_joinChannel = document.getElementById('joinChannel');
@@ -28,6 +40,7 @@ window.PanoDemo = PanoDemo;
 
 
 function init_UI () {
+  input_userId.oninput = onInputUserId;
   button_mute_mic.disabled = true;
   button_audio.disabled = true;
 
@@ -41,15 +54,21 @@ function init_UI () {
  *****************************************************************************************************************
  */
 function joinChannel() {
-  button_joinChannel.disabled = true;
-  button_joinChannel.style.color = 'black';
-
+  button_joinChannel.innerText = 'Joining...';
   // init params
-  PanoDemo.appId = document.getElementById('appID').value;
-  PanoDemo.token = document.getElementById('token').value;
-  PanoDemo.channelId = document.getElementById('channelID').value;
-  PanoDemo.userId = document.getElementById('userID').value;
+  PanoDemo.rtcServer = input_rtcServer.value;
+  PanoDemo.appId = input_appId.value;
+  PanoDemo.token = input_token.value;
+  PanoDemo.channelId = input_channel.value;
+  PanoDemo.userId = input_userId.value;
   PanoDemo.userName = document.getElementById('userName').value;
+
+  localStorage.setItem('PanoDemoRtcServer', PanoDemo.rtcServer);
+  localStorage.setItem('PanoDemoAppId', PanoDemo.appId);
+  localStorage.setItem('PanoDemoToken', PanoDemo.token);
+  localStorage.setItem('PanoDemoChannelId', PanoDemo.channelId);
+  localStorage.setItem('PanoDemoUserId', PanoDemo.userId);
+
   document.querySelectorAll('input[name="channelMode"]').forEach((radio) => {
     if (radio.checked) {
       PanoDemo.channelMode =
@@ -68,18 +87,18 @@ function joinChannel() {
     return
   }
   let rtcEngine = null;
-  if(document.getElementById('rtcServer').value){
-    rtcEngine = new PanoRtc.RtcEngine({appId, rtcServer: rtcServer.value});
-  } else {
-    rtcEngine = new PanoRtc.RtcEngine(appId);
+  if(input_rtcServer.value){
+    PanoRtc.RtcEngine.setServer(input_rtcServer.value);
   }
+  rtcEngine = new PanoRtc.RtcEngine(appId);
   // For easily debug
   window.rtcEngine = rtcEngine;
   const eventTextarea = document.getElementById('events');
   rtcEngine.on = new Proxy(rtcEngine.on, {
     apply(target, object, args) {
       Reflect.apply(target, object, [args[0], params => {
-        eventTextarea.value += `${JSON.stringify(params)}\r\n \r\n`;
+        eventTextarea.value += new Date().toLocaleString();
+        eventTextarea.value += ` ${JSON.stringify(params)}\r\n\r\n`;
         eventTextarea.scrollTop = eventTextarea.scrollHeight;
         Reflect.apply(args[1], object, [params]);
       }]);
@@ -92,15 +111,16 @@ function joinChannel() {
   */
 
   rtcEngine.on(PanoRtc.RtcEngine.Events.joinChannelConfirm, data => {
+    button_joinChannel.innerText = 'Join Channel';
     if (data.result !== 'success') {
       button_leaveChannel.disabled = true;
       button_leaveChannel.style.color = 'black';
-      button_joinChannel.disabled = false;
-      button_joinChannel.style.color = 'green';
       window.alert(`join channel failed because: ${data.message}`);
       return;
     }
     console.log('join channel success!');
+    button_joinChannel.disabled = true;
+    button_joinChannel.style.color = 'black';
     button_leaveChannel.disabled = false;
     button_leaveChannel.style.color = 'red';
     button_leaveChannel.onclick = () => leaveChannel();
@@ -161,7 +181,6 @@ function joinChannel() {
   rtcEngine.on(PanoRtc.RtcEngine.Events.enumerateDeviceTimeout, (data) => {
     console.log('demo app: enumerateDeviceTimeout', data);
   });
-  // rtcEngine.on(PanoRtc.RtcEngine.Events.activeSpeakerListUpdate, data => console.log('demo app: activeSpeakerListUpdate', data))
 
   rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStart, (data) => {
     userMediaStatusUpdate(data, 'audio', 'unmute');
@@ -186,10 +205,10 @@ function joinChannel() {
     userName: PanoDemo.userName,
     subscribeAudioAll: true
   };
-  const joinChannelResult = rtcEngine.joinChannel(channelParam, {
+  const joinChannelAPIResult = rtcEngine.joinChannel(channelParam, {
     joinChannelType: PanoRtc.Constants.JoinChannelType.mediaOnly
   });
-  console.log('joinChannelResult: ', joinChannelResult);
+  console.log('joinChannelAPIResult: ', joinChannelAPIResult);
 } 
 
 function leaveChannel(passive = false) {
@@ -201,18 +220,10 @@ function leaveChannel(passive = false) {
   PanoDemo = {
     users: []
   };
-  if(document.getElementById('rtcServer').value){
-    rtcEngine = new PanoRtc.RtcEngine({appId, rtcServer: rtcServer.value});
-  } else {
-    rtcEngine = new PanoRtc.RtcEngine(appId);
-  }
   button_joinChannel.disabled = false;
   button_joinChannel.style.color = 'green';
   textArea_roster.value = '';
-
-  setTimeout(function () {
-    // location.reload(true);
-  }, 2000);
+  countdownDic.style.display = 'none';
 }
 
 function updateRoster() {
@@ -309,11 +320,22 @@ function stopAudio () {
   button_audio.onclick = startAudio;
 }
 
+function onInputUserId(event){
+  setUserNameWith(event.target.value);
+}
+
+function setUserNameWith(userId){
+  document.getElementById('userName').value = 'Web_' + userId;
+}
 
 (function () {
-  let rand = Math.random();
-  let userId = '1908' + Math.round(rand * 9000);
-  document.getElementById('userID').value = userId;
-  document.getElementById('userName').value = 'Pano-' + userId;
+  if(input_userId.value){
+    setUserNameWith(input_userId.value);
+  }else{
+    let rand = Math.random();
+    let userId = '1908' + Math.round(rand * 9000);
+    document.getElementById('userID').value = userId;
+    setUserNameWith(userId);
+  }
   init_UI();
 })();

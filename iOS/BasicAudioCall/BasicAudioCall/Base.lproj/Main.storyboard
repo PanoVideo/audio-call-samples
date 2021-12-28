@@ -27,12 +27,12 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Drv-sd-Q1j">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User ID" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Drv-sd-Q1j">
                                 <rect key="frame" x="50" y="220" width="314" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="iAS-95-n10" userLabel="Channel Mode">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="iAS-95-n10" userLabel="Channel Mode">
                                 <rect key="frame" x="99.5" y="262" width="215" height="32"/>
                                 <segments>
                                     <segment title="1v1 Mode"/>
@@ -74,9 +74,9 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="channelMode" destination="iAS-95-n10" id="c70-lA-xEM"/>
                         <outlet property="channelId" destination="6In-Z6-U3f" id="VCz-Y4-pZx"/>
-                        <outlet property="userName" destination="Drv-sd-Q1j" id="q11-8S-pOl"/>
+                        <outlet property="channelMode" destination="iAS-95-n10" id="c70-lA-xEM"/>
+                        <outlet property="userId" destination="Drv-sd-Q1j" id="wxG-9d-B3g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
