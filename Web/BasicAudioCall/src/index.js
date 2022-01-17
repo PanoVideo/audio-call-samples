@@ -1,7 +1,6 @@
 import PanoRtc from '@pano.video/panortc'
-import { find } from 'lodash-es';
 let PanoDemo = {
-  users: []
+  users: new Map()
 };
 
 // UI
@@ -128,26 +127,27 @@ function joinChannel() {
     button_audio.disabled = false;
   });
 
-  rtcEngine.on(PanoRtc.RtcEngine.Events.userListChange, result => {
-    console.log('demo app: rosterChange', result);
-    PanoDemo.users = result.users.map(user => {
-      const oldUser = find(PanoDemo.users, { userId: user.userId }) || {};
-      return Object.assign(oldUser, user);
-    });
-    updateRoster();
-  });
-
   rtcEngine.on(PanoRtc.RtcEngine.Events.userLeave, (data) => {
     console.log('demo app: userleave,', data);
+    PanoDemo.users.delete(data.userId)
+    updateRoster()
   });
   rtcEngine.on(PanoRtc.RtcEngine.Events.userJoin, (data) => {
     console.log('demo app: userjoin,', data);
+    PanoDemo.users.set(data.user.userId, {userId: data.user.userId, userName: data.user.userName})
+    updateRoster()
   });
-  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMute, (data) =>
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMute, (data) => {
     console.log('demo app: userAudioMute,', data)
+    PanoDemo.users.get(data.userId).audioStatus = 'mute'
+    updateRoster()
+  }
   );
-  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) =>
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) => {
     console.log('demo app: userAudioUnmute,', data)
+    PanoDemo.users.get(data.userId).audioStatus = 'unmute'
+    updateRoster()
+  }
   );
   rtcEngine.on(PanoRtc.RtcEngine.Events.firstAudioDataReceived, (data) =>
     console.log('demo app: firstAudioDataReceived', data)
@@ -183,17 +183,17 @@ function joinChannel() {
   });
 
   rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStart, (data) => {
-    userMediaStatusUpdate(data, 'audio', 'unmute');
+    userMediaStatusUpdate(data, 'audio', 'started');
   });
   rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioStop, (data) => {
-    userMediaStatusUpdate(data, 'audio', 'closed');
+    userMediaStatusUpdate(data, 'audio', 'stopped');
   });
-  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMuted, (data) => {
-    userMediaStatusUpdate(data, 'audio', 'mute');
+  rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioMute, (data) => {
+    userMediaStatusUpdate(data, 'audio', 'muted');
   });
 
   rtcEngine.on(PanoRtc.RtcEngine.Events.userAudioUnmute, (data) => {
-    userMediaStatusUpdate(data, 'audio', 'unmute');
+    userMediaStatusUpdate(data, 'audio', 'unmuted');
   });
 
   let channelParam = {
@@ -227,31 +227,26 @@ function leaveChannel(passive = false) {
 }
 
 function updateRoster() {
-  if (PanoDemo.users instanceof Array) {
-    let list = '';
-    PanoDemo.users.forEach(function (user) {
-      list += 'Name: ' + user.userName + ', ID: ' + user.userId + ' \r\n' +
-        'Audio: ' + (user.audioStatus ? user.audioStatus : 'closed') + ', Video: ' + (user.videoStatus ? user.videoStatus : 'closed') + ' \r\n \r\n';
-    });
-    textArea_roster.value = list;
-  }
+  let list = '';
+  PanoDemo.users.forEach(function (user) {
+    list += 'Name: ' + user.userName + ', ID: ' + user.userId + ' \r\n' +
+      'Audio: ' + (user.audioStatus ? user.audioStatus : 'closed') + ' \r\n \r\n';
+  });
+  textArea_roster.value = list;
 }
 
-function userMediaStatusUpdate (data, kind, status) {
-  console.log('demo app: receive user video status update,', data);
-  if (PanoDemo.users instanceof Array) {
-    for (let i = 0; i < PanoDemo.users.length; i++) {
-      if (PanoDemo.users[i].userId === data.userId) {
-        if (kind === 'audio') {
-          PanoDemo.users[i].audioStatus = status;
-        } else if (kind === 'video') {
-          PanoDemo.users[i].videoStatus = status;
-        }
-        break;
+function userMediaStatusUpdate (data, type, status) {
+  console.log('demo app: receive user audio status update,', data);
+  const users = Array.from(PanoDemo.users.values())
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].userId === data.userId) {
+      if (type === 'audio') {
+        users[i].audioStatus = status;
       }
+      break;
     }
-    updateRoster();
   }
+  updateRoster();
 }
 
 
