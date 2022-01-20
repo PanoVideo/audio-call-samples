@@ -218,7 +218,7 @@ function leaveChannel(passive = false) {
     rtcEngine.leaveChannel();
   }
   PanoDemo = {
-    users: []
+    users: new Map()
   };
   button_joinChannel.disabled = false;
   button_joinChannel.style.color = 'green';
